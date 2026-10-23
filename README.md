@@ -88,6 +88,3 @@ Dữ liệu SCADA tua-bin gió dạng chuỗi thời gian (Date/Time, LV ActiveP
 
 Chưa kết nối trực tiếp PLC (mới phát lại dữ liệu lịch sử); thiếu pitch angle, trạng thái phanh, power setpoint; hướng tới Modbus TCP / OPC UA / MQTT, nhiều tua-bin và theo dõi data drift.
 
-## Giấy phép
-
-Chưa chọn – xem https://choosealicense.com (ví dụ MIT cho mã nguồn).
