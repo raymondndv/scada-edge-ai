@@ -1,0 +1,64 @@
+services:
+  influxdb:
+    image: influxdb:2.7
+    container_name: scada_influxdb
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=${INFLUX_ADMIN_USER}
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${INFLUX_ADMIN_PASSWORD}
+      - DOCKER_INFLUXDB_INIT_ORG=${INFLUX_ORG}
+      - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUX_BUCKET}
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUX_TOKEN}
+    networks: [scada_net]
+    cpus: 2.0
+    mem_limit: 1g
+    restart: always
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: scada_grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
+      # --- Gửi email cảnh báo ---
+      - GF_SMTP_ENABLED=true
+      - GF_SMTP_HOST=${SMTP_HOST}
+      - GF_SMTP_USER=${SMTP_USER}
+      - GF_SMTP_PASSWORD=${SMTP_PASSWORD}
+      - GF_SMTP_SKIP_VERIFY=true
+      - GF_SMTP_FROM_ADDRESS=${SMTP_FROM_ADDRESS}
+      - GF_SMTP_FROM_NAME=${SMTP_FROM_NAME}
+    depends_on: [influxdb]
+    networks: [scada_net]
+    cpus: 1.0
+    mem_limit: 512m
+    restart: always
+
+  ai_exporter:
+    build: ./exporter
+    container_name: scada_ai_exporter
+    environment:
+      - INFLUX_URL=http://influxdb:8086
+      - INFLUX_TOKEN=${INFLUX_TOKEN}
+      - INFLUX_ORG=${INFLUX_ORG}
+      - INFLUX_BUCKET=${INFLUX_BUCKET}
+    depends_on: [influxdb]
+    networks: [scada_net]
+    cpus: 2.0
+    mem_limit: 512m
+    restart: unless-stopped
+
+networks:
+  scada_net:
+    driver: bridge
+
+volumes:
+  influxdb_data:
+  grafana_data:
