@@ -82,7 +82,7 @@ python stream_exporter.py
 
 ## Dữ liệu
 
-Dữ liệu SCADA tua-bin gió dạng chuỗi thời gian (Date/Time, LV ActivePower, Wind Speed, Theoretical Power Curve, Wind Direction). Repo chỉ kèm phần test để phát lại; hãy ghi rõ nguồn và giấy phép của bộ dữ liệu gốc ở đây.
+Dữ liệu SCADA tua-bin gió dạng chuỗi thời gian (Date/Time, LV ActivePower, Wind Speed, Theoretical Power Curve, Wind Direction).
 
 ## Hạn chế và hướng phát triển
 
